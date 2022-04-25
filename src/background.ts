@@ -1,11 +1,12 @@
 'use strict'
 /* eslint-disable */
 import { app, protocol, BrowserWindow, ipcMain, ipcRenderer, dialog } from 'electron'
-
+// import process from 'process';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
-
+const path = require("path")
+const url = require('url');
 // const path = require('path');
 // const fs = require('fs');
 
@@ -23,23 +24,67 @@ mainwindowClass.createMenu()
 
 
 
+// function createSplashWindow() {
+// 	// Create the browser window.
+// 	const mainWindow = new BrowserWindow({
+// 	  width: 800,
+// 	  height: 600,
+// 	  webPreferences: {
+// 		 preload: path.join(__dirname, 'preload.js')
+// 	   }
+// 	})
+// 	// and load the index.html of the app.
+// 	mainWindow.loadFile('splash.html')
+// 	mainWindow.center();
+// 	// Open the DevTools.  
+//    // mainWindow.webContents.openDevTools()
+//   }
+
+ 
 
 
 
-
-
-
-
+// createSplashWindow()
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
 	{ scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 let mainWindow;
 async function createWindow() {
+
+	// var splash = new BrowserWindow({
+	// 	width: 500, 
+	// 	height: 300, 
+	// 	// transparent: true, 
+	// 	frame: false, 
+	// 	alwaysOnTop: true 
+	// });
+
+	// splash.loadURL(url.format({
+	// 	pathname : path.join(__dirname,'src/splash.html'),
+	// 	protocol:'file',
+	// 	slashes:true
+	//   }))
+	// splash.loadFile('./splash.html');
+	// splash.loadURL('https://github.com')
+	// splash.loadURL(path.join(__dirname,'./splash.html'));
+	// splash.loadURL('app://./splash.html');
+	
+	// splash.center()
+// console.log(path.join(__dirname,'./src/splash.html'));
+// console.log(__dirname)
+
+// console.log(`path: ${process.cwd()}`);
+
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
 		width: 1000,
 		height: 800,
+		show: false,
+		frame: true,
+		autoHideMenuBar: true,
+		backgroundColor: '#383b43',
+		titleBarStyle: "hiddenInset",
 		webPreferences: {
 
 			// Use pluginOptions.nodeIntegration, leave this alone
@@ -58,9 +103,19 @@ async function createWindow() {
 		// Load the index.html when not in development
 		mainWindow.loadURL('app://./index.html')
 	}
+	// setTimeout(function () {
+	// 	// splash.close();
+	// 	// mainWindow.maximize();
+	// 	mainWindow.show();
+	//   }, 5000);
+
+	  mainWindow.once('ready-to-show', () => {
+		mainWindow.show()
+		mainWindow.focus();
+	  })
 }
 
-// Quit when all windows are closed.
+// Quit when all windows are closed. 
 app.on('window-all-closed', () => {
 	// On macOS it is common for applications and their menu bar
 	// to stay active until the user quits explicitly with Cmd + Q
@@ -84,7 +139,7 @@ app.on('ready', async () => {
 		try {
 			await installExtension(VUEJS_DEVTOOLS)
 		} catch (e) {
-			console.error('Vue Devtools failed to install:', e.toString())
+			// console.error('Vue Devtools failed to install:', e.toString())
 		}
 	}
 	createWindow()
@@ -97,10 +152,13 @@ ipcMain.on('defaultDirectory:unset', (event, log) => {
 		title: 'Select Project Path',
 		properties: ['openDirectory']
 	}).then(result => {
-		console.log('mainWindow')
+		// console.log('mainWindow')
 		event.sender.send('defaultDirectory:set', result);
-		console.log({ result: result, subdirectories: mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]) })
-
+		// console.log({ result: result, subdirectories: mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]) })
+		mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]);
+		// console.log(result)
+		// console.log(result.filePaths[0])
+		mainwindowClass.readFilesInaDirectory(result.filePaths[0], mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]) )
 
 
 		// mainWindow.webContents.on("did-finish-load", () => {
