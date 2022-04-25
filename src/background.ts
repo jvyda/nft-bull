@@ -21,61 +21,12 @@ console.log(store.get('unicorn'));
 
 import mainwindowClass from './mainwindowClass'
 mainwindowClass.createMenu()
-
-
-
-// function createSplashWindow() {
-// 	// Create the browser window.
-// 	const mainWindow = new BrowserWindow({
-// 	  width: 800,
-// 	  height: 600,
-// 	  webPreferences: {
-// 		 preload: path.join(__dirname, 'preload.js')
-// 	   }
-// 	})
-// 	// and load the index.html of the app.
-// 	mainWindow.loadFile('splash.html')
-// 	mainWindow.center();
-// 	// Open the DevTools.  
-//    // mainWindow.webContents.openDevTools()
-//   }
-
- 
-
-
-
-// createSplashWindow()
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
 	{ scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 let mainWindow;
 async function createWindow() {
-
-	// var splash = new BrowserWindow({
-	// 	width: 500, 
-	// 	height: 300, 
-	// 	// transparent: true, 
-	// 	frame: false, 
-	// 	alwaysOnTop: true 
-	// });
-
-	// splash.loadURL(url.format({
-	// 	pathname : path.join(__dirname,'src/splash.html'),
-	// 	protocol:'file',
-	// 	slashes:true
-	//   }))
-	// splash.loadFile('./splash.html');
-	// splash.loadURL('https://github.com')
-	// splash.loadURL(path.join(__dirname,'./splash.html'));
-	// splash.loadURL('app://./splash.html');
-	
-	// splash.center()
-// console.log(path.join(__dirname,'./src/splash.html'));
-// console.log(__dirname)
-
-// console.log(`path: ${process.cwd()}`);
-
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
 		width: 1000,
@@ -103,12 +54,6 @@ async function createWindow() {
 		// Load the index.html when not in development
 		mainWindow.loadURL('app://./index.html')
 	}
-	// setTimeout(function () {
-	// 	// splash.close();
-	// 	// mainWindow.maximize();
-	// 	mainWindow.show();
-	//   }, 5000);
-
 	  mainWindow.once('ready-to-show', () => {
 		mainWindow.show()
 		mainWindow.focus();
@@ -151,23 +96,16 @@ ipcMain.on('defaultDirectory:unset', (event, log) => {
 	dialog.showOpenDialog({
 		title: 'Select Project Path',
 		properties: ['openDirectory']
-	}).then(result => {
+	}).then(async (result) => {
 		// console.log('mainWindow')
-		event.sender.send('defaultDirectory:set', result);
-		// console.log({ result: result, subdirectories: mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]) })
-		mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]);
-		// console.log(result)
-		// console.log(result.filePaths[0])
-		mainwindowClass.readFilesInaDirectory(result.filePaths[0], mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]) )
-
-
-		// mainWindow.webContents.on("did-finish-load", () => {
-		// 	mainWindow.webContents.send("load:project", { 'SAVED': 'File Saved' });
-		// });
-
-
-
-		// callback(result.filePaths)
+		console.log(result)
+		if(!result.canceled){
+			const filesJson = await mainwindowClass.readFilesInaDirectory(result.filePaths[0], mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]) )
+		// console.log(filesJson)
+			event.sender.send('defaultDirectory:set', {result, data: filesJson});
+		}else{
+			event.sender.send('defaultDirectory:set', {result});
+		}
 	}).catch(err => {
 		console.log(err)
 	})

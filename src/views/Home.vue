@@ -43,10 +43,10 @@ export default class Home extends Vue {
 	}
 	mounted() {
 		this.$nextTick(function () {
-			ipcRenderer.on('defaultDirectory:set', (event, paths) => {
+			ipcRenderer.on('defaultDirectory:set', (event, result) => {
 				//@ts-ignore
-				if (!event.canceled && paths.filePaths.length > 0) {
-					this.setDefaultDirectory(paths.filePaths[0])
+				if (!event.canceled && result.result.filePaths.length > 0) {
+					this.setDefaultDirectory(result.result.filePaths[0])
 					this.fullscreenLoading = false
 				}
 				else {

@@ -2,6 +2,7 @@
 import { app, protocol, BrowserWindow, Menu, ipcMain, dialog } from 'electron'
 const fs = require('fs')
 const fsPromises = fs.promises;
+import { readdir } from 'fs/promises';
 const path = require('path');
 // export default {
 	const createMenu =()=> {
@@ -9,28 +10,7 @@ const path = require('path');
 		const menu = Menu.buildFromTemplate([
 			{
 				label: 'Menu',
-				submenu: [
-					// 	{
-					// 		label: 'Home',
-					// 		click() {
-					// 			console.log("Navigate to Home");
-					// 		}
-
-					// 	},
-					// 	{
-					// 		label: 'About',
-
-					// 		click() {
-					// 			console.log("Navigate to About");
-					// 		}
-					// 	},
-					{
-						label: 'Exit',
-						click() {
-							app.quit()
-						}
-					}
-				]
+				submenu: []
 			}
 		])
 		Menu.setApplicationMenu(menu);
@@ -43,21 +23,55 @@ const path = require('path');
 		
 	}
 	const  readFilesInaDirectory = async(parentDir, directories) =>{
-		let mainArray:any = []
-		directories.forEach(async (directory) => {
-			// let getfiles = getFilesAsArray(parentDir,directory)
-			// console.log(getfiles)
-			const x = await listDir(parentDir + '\\' +directory)
-			console.log(x)
-			// console.log(obj.filesdata)
-		});
-		// mainArray.push({"one": "two"})
+		const mainArray:any = []
+
+		
+			
+		  
+			for (const directory of directories) {
+				
+				const x = await listDir(parentDir + '\\' +directory)
+				mainArray.push({trait: directory, filesdata:x})
+				// mainArray.filesdata=x
+				
+			}
+		  
+			return mainArray
+		  
+
+
+
+
+
+		// directories.forEach(async (directory) => {
+		// 	// let getfiles = getFilesAsArray(parentDir,directory)
+		// 	// console.log(getfiles)
+		// 	mainArray.push({trait: directory, filesdata:[]})
+		// 	const x = await listDir(parentDir + '\\' +directory)
+		// 	mainArray.filesdata=x
+		// 	// console.log(mainArray)
+		// });
+		// // mainArray.push({"one": "two"})
 		// console.log(mainArray)
 	}
 	async function listDir(dirPath) {
 		try {
-			console.log(dirPath)
-		  return fsPromises.readdir(dirPath);
+			const files = await readdir(dirPath);
+			let filesdata:any = []
+			files.forEach(file=>{
+				let x:any = {}
+				x.name = path.parse(file).name
+				x.svg = fs.readFileSync(dirPath+'\\'+file).toString();
+				filesdata.push(x)
+			})
+			return filesdata
+			// fsPromises.readdirSync(dirPath).filter(function (file) {
+			// 	return fs.statSync(dirPath+'/'+file).isDirectory();
+			//   });
+		//   return fsPromises.readdir(dirPath).filter(function (file) {
+		// 		return fs.statSync(dirPath+'/'+file).isDirectory();
+		// 	  });
+		// return fsPromises.readdir(dirPath)
 		} catch (err) {
 		  console.error('Error occured while reading directory!', err);
 		}
@@ -78,10 +92,10 @@ const path = require('path');
 			
 			files.forEach(file =>{
 				const filepath = dirPath+'\\'+dirName+'\\'+file
-				const fileData = fs.readFileSync(filepath.toString());
+				const fileData = fs.readFileSync(filepath);
 				const itemobj: any = {};
 				itemobj.name =path.basename(dirPath+'\\'+dirName+'\\'+file)
-				itemobj.svg = fileData
+				itemobj.svg = fileData.toString()
 				obj.filesdata.push(itemobj)
 			})
 		});
