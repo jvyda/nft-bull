@@ -1,26 +1,20 @@
 'use strict'
 /* eslint-disable */
 import { app, protocol, BrowserWindow, ipcMain, ipcRenderer, dialog } from 'electron'
+
 // import process from 'process';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const path = require("path")
 const url = require('url');
+
 // const path = require('path');
 // const fs = require('fs');
-
-
-const Store = require('electron-store');
-
-const store = new Store();
-
-store.set('unicorn', null);
-console.log(store.get('unicorn'));
-
-
+// const basepath = path.join(__dirname, `../src/preload.js`)
+// console.log(basepath)
 import mainwindowClass from './mainwindowClass'
-mainwindowClass.createMenu()
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
 	{ scheme: 'app', privileges: { secure: true, standard: true } }
@@ -32,21 +26,24 @@ async function createWindow() {
 		width: 1000,
 		height: 800,
 		show: false,
-		frame: true,
+		frame: false,
 		autoHideMenuBar: true,
-		backgroundColor: '#383b43',
+		backgroundColor: '#0a101d',
 		titleBarStyle: "hiddenInset",
 		webPreferences: {
 
 			// Use pluginOptions.nodeIntegration, leave this alone
 			// See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
 			nodeIntegration: true,
-			contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
+			contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+			preload:  path.join(__dirname, `../src/preload.js`),
+			enableRemoteModule: true
 		}
 	})
 
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
 		// Load the url of the dev server if in development mode
+		
 		await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
 		if (!process.env.IS_TEST) mainWindow.webContents.openDevTools()
 	} else {
@@ -97,11 +94,8 @@ ipcMain.on('defaultDirectory:unset', (event, log) => {
 		title: 'Select Project Path',
 		properties: ['openDirectory']
 	}).then(async (result) => {
-		// console.log('mainWindow')
-		console.log(result)
 		if(!result.canceled){
 			const filesJson = await mainwindowClass.readFilesInaDirectory(result.filePaths[0], mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]) )
-		// console.log(filesJson)
 			event.sender.send('defaultDirectory:set', {result, data: filesJson});
 		}else{
 			event.sender.send('defaultDirectory:set', {result});
@@ -110,7 +104,6 @@ ipcMain.on('defaultDirectory:unset', (event, log) => {
 		console.log(err)
 	})
 })
-
 
 
 // Exit cleanly on request from parent process in development mode.

@@ -12,7 +12,7 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
-	background: #383b43;
+	background: #0a101d;
 	color: #c6d0d4;
 	height: 100%;
 	font-family: lato;

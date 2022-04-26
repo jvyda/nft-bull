@@ -6,47 +6,17 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state: {
 		defaultDirectory: null,
-		nftRenderView: {
-			attributes: {
-				bg: {
-					name: '',
-					index: 0
-				},
-				body: {
-					name: '',
-					index: 1
-				},
-				eyes: {
-					name: '',
-					index: 2
-				},
-				earLeft: {
-					name: '',
-					index: 3
-				},
-				earRight: {
-					name: '',
-					index: 3
-				},
-				hair: {
-					name: '',
-					index: 4
-				},
-				mouth: {
-					name: '',
-					index: 5
-				},
-				hornLeft: {
-					name: ''
-				}
-
-
-			}
-		}
+		nftData:[],
+		baseModel: [],
+		layerOrder: []
 	},
 	mutations: {
 		setDefaultDirectory(state, payload) {
 			state.defaultDirectory = payload
+		},
+		setNftData(state, payload){
+			console.log(payload)
+			state.nftData = payload
 		}
 	},
 	actions: {
@@ -56,6 +26,9 @@ export default new Vuex.Store({
 	getters: {
 		defaultDirectory: state => {
 			return state.defaultDirectory
+		},
+		nftDataGetter: state => {
+			return state.nftData
 		},
 	}
 })

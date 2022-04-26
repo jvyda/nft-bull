@@ -4,7 +4,7 @@
 	<div class="home" v-loading.fullscreen.lock="fullscreenLoading">
 		<div class="flex-holder" v-if="defaultDirectory ==='' || defaultDirectory===null">
 
-			<div class="bull-logo"><img src="@/assets/bull.png" /></div>
+			<div class="bull-logo"><img src="@/assets/bull1.png" /></div>
 			<el-button type="success" class="setdriectory-button" @click="openWorkingDirectoryDialog">Set Working Directory</el-button>
 			<h4 class="color-white-text">
 				You need to set a working directory first
@@ -19,9 +19,8 @@
 import { Getter, Mutation } from 'vuex-class'
 import { Component, Vue } from 'vue-property-decorator';
 // import { useIpcRenderer } from '@vueuse/electron'
-// const ipcRenderer = useIpcRenderer()
 const fs = require('fs')
-import { contextBridge, ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron'
 @Component({
 	components: {
 
@@ -30,7 +29,9 @@ import { contextBridge, ipcRenderer } from 'electron'
 export default class Home extends Vue {
 	fullscreenLoading = false
 	@Getter('defaultDirectory') defaultDirectory: any
+	@Getter('nftDataGetter') nftDataGetter: any
 	@Mutation('setDefaultDirectory') setDefaultDirectory
+	@Mutation('setNftData') setNftData
 	openWorkingDirectoryDialog() {
 		this.fullscreenLoading = true
 		ipcRenderer.send('defaultDirectory:unset');
@@ -47,7 +48,10 @@ export default class Home extends Vue {
 				//@ts-ignore
 				if (!event.canceled && result.result.filePaths.length > 0) {
 					this.setDefaultDirectory(result.result.filePaths[0])
+					this.setNftData(result.data)
+					
 					this.fullscreenLoading = false
+					this.$router.push({ name: 'Editor' })
 				}
 				else {
 					this.fullscreenLoading = false
