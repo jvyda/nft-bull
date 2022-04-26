@@ -31,11 +31,13 @@ import { Component, Vue } from "vue-property-decorator";
 import { remote, ipcRenderer } from "electron";
 const dialog = remote.dialog;
 const WIN = remote.getCurrentWindow();
+import fs from "fs";
 @Component({
   components: {},
 })
 export default class MenuBar extends Vue {
-  @Getter('defaultDirectory') defaultDirectory: any
+  @Getter("defaultDirectory") defaultDirectory: any;
+  @Getter("fullStore") fullStore: any;
   maximizeWindow() {
     if (remote.getCurrentWindow().isMaximized()) {
       remote.getCurrentWindow().unmaximize();
@@ -51,7 +53,7 @@ export default class MenuBar extends Vue {
   minimizeWindow() {
     remote.getCurrentWindow().minimize();
   }
-  saveFile() {
+  async saveFile() {
     let options = {
       //Placeholder 1
       title: "Save file - Jay's NFT Editor",
@@ -68,8 +70,21 @@ export default class MenuBar extends Vue {
         { name: "All Files", extensions: ["*"] },
       ],
     };
-    console.log(options)
-    // let filename = dialog.showSaveDialog(WIN, options)
+
+    let filename = await dialog.showSaveDialog(WIN, options);
+
+    const fs = require("fs");
+    console.log(filename);
+
+    var jsonContent = JSON.stringify(filename);
+    if (!filename.canceled) {
+      fs.writeFile(filename.filePath, JSON.stringify(this.fullStore), "utf8", function (err) {
+        if (err) {
+          console.log("An error occured while writing JSON Object to File.");
+          return console.log(err);
+        }
+      });
+    }
   }
 }
 </script>

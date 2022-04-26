@@ -2,8 +2,27 @@
   <div class="editor">
     <MenuBar />
     <el-container>
-      <el-container></el-container>
+      <el-container>
+        <div v-if="layerOrderExists">
+          <div
+            v-html="ct"
+            class="svgholder"
+            v-for="(item, key) in nftDataGetter"
+            :key="key"
+          ></div>
+        </div>
+        <div v-else>Add NFT Layers</div>
+      </el-container>
+
       <el-aside width="240px" class="editor-sidebar">
+        <el-button
+          size="small"
+          @click="allNftLayersDialog = true"
+          type="primary"
+          style="margin-left: 16px"
+        >
+          Add Layer
+        </el-button>
         <el-collapse v-model="activeName" accordion>
           <el-collapse-item
             :title="item.trait"
@@ -15,6 +34,7 @@
         </el-collapse>
       </el-aside>
     </el-container>
+    <AllLayersDialog @dialogVisibility="captureVisibility" :allNftLayersDialog="allNftLayersDialog"></AllLayersDialog>
   </div>
 </template>
 <script lang="ts">
@@ -22,15 +42,26 @@ import { Getter, Mutation } from "vuex-class";
 import { Component, Vue } from "vue-property-decorator";
 import { remote, ipcRenderer } from "electron";
 import MenuBar from "@/views/MenuBar.vue";
-
+import AllLayersDialog from "@/views/AllLayersDialog.vue";
 @Component({
   components: {
     MenuBar,
+    AllLayersDialog
   },
 })
 export default class Editor extends Vue {
   @Getter("nftDataGetter") nftDataGetter: any;
+  @Getter("layerOrder") layerOrder: any;
   activeName = "body";
+  allNftLayersDialog = false;
+  
+  get layerOrderExists() {
+    return this.layerOrder.length ? true : false;
+  }
+  captureVisibility(message){
+    this.allNftLayersDialog = message
+  }
+  
 }
 </script>
 <style lang="scss">

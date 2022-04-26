@@ -8,7 +8,7 @@ export default new Vuex.Store({
 		defaultDirectory: null,
 		nftData:[],
 		baseModel: [],
-		layerOrder: []
+		layerOrder: [],
 	},
 	mutations: {
 		setDefaultDirectory(state, payload) {
@@ -30,5 +30,10 @@ export default new Vuex.Store({
 		nftDataGetter: state => {
 			return state.nftData
 		},
+		fullStore:state=>{
+			return state
+		},layerOrder: state=>{
+			return state.layerOrder
+		}
 	}
 })
