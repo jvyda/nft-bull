@@ -4,7 +4,6 @@
     title="Outer Dialog"
     :visible.sync="showDialog"
     width="80%"
-    :close="dialogClosed"
   >
     <el-tabs v-model="activeTab" @tab-click="handleClick">
       <el-tab-pane
@@ -15,7 +14,7 @@
         >
         
         <div class="dialog-preview-image">
-            <div v-html=""
+           
         </div>
         
         </el-tab-pane
@@ -26,6 +25,7 @@
 <script lang="ts">
 import { Getter, Mutation } from "vuex-class";
 import { Component, Vue, PropSync, Prop } from "vue-property-decorator";
+const cloneDeep = require('clone-deep');
 @Component({
   components: {},
 })
@@ -34,7 +34,7 @@ export default class LayersDialog extends Vue {
   // @Prop('allNftLayersDialog', { type: Boolean }) syncedName!: Boolean
   // @PropSync('allNftLayersDialog', { type: Boolean }) syncedName!: boolean
   @Prop() allNftLayersDialog!: boolean;
-  activeTab = "body";
+  activeTab = "Body";
   get showDialog() {
     return this.allNftLayersDialog;
   }
@@ -42,7 +42,15 @@ export default class LayersDialog extends Vue {
       this.$emit('dialogVisibility', false)
   }
   handleClick(tab, event) {
-    console.log(tab, event);
+    this.selectedTraitLayers()
+  }
+   get selectedTraitLayers(){
+    const array = cloneDeep(this.nftDataGetter)
+      const list = array.filter((item)=>{
+          return item.trait == this.activeTab
+      })
+      return list
+     
   }
 }
 </script>

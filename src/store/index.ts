@@ -15,7 +15,6 @@ export default new Vuex.Store({
 			state.defaultDirectory = payload
 		},
 		setNftData(state, payload){
-			console.log(payload)
 			state.nftData = payload
 		}
 	},
