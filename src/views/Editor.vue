@@ -3,15 +3,17 @@
     <MenuBar />
     <el-container>
       <el-container>
-        <div v-if="layerOrderExists">
+        <div v-if="baseModel.length>0">
           <div
-            v-html="ct"
             class="svgholder"
-            v-for="(item, key) in nftDataGetter"
+            v-for="(item, key) in baseModel"
             :key="key"
+            v-html="item.svg"
+            :class="item.trait"
           ></div>
         </div>
         <div v-else>Add NFT Layers</div>
+
       </el-container>
 
       <el-aside width="240px" class="editor-sidebar">
@@ -52,6 +54,7 @@ import AllLayersDialog from "@/views/AllLayersDialog.vue";
 export default class Editor extends Vue {
   @Getter("nftDataGetter") nftDataGetter: any;
   @Getter("layerOrder") layerOrder: any;
+  @Getter("baseModel") baseModel: any;
   activeName = "body";
   allNftLayersDialog = false;
   
@@ -60,6 +63,9 @@ export default class Editor extends Vue {
   }
   captureVisibility(message){
     this.allNftLayersDialog = message
+  }
+  getSvgFromArray(item){
+    // console.log(item) 
   }
   
 }
@@ -91,6 +97,17 @@ export default class Editor extends Vue {
     border-top: none;
     border-bottom: none;
     height: 100%;
+  }
+}
+.svgholder{
+
+      position: absolute;
+    width: 800px;
+    height: 800px;
+    left: calc((100% - 800px - 240px)/2);
+  svg{
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 </style>

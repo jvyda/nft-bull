@@ -49,7 +49,6 @@ export default class Home extends Vue {
 				if (!event.canceled && result.result.filePaths.length > 0) {
 					this.setDefaultDirectory(result.result.filePaths[0])
 					this.setNftData(result.data)
-					console.log(result.data)
 					this.fullscreenLoading = false
 					this.$router.push({ name: 'Editor' })
 				}

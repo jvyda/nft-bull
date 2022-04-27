@@ -23,8 +23,12 @@ async function listDir(dirPath) {
     let filesdata: any = [];
     files.forEach((file) => {
       let x: any = {};
-      x.name = path.parse(file).name;
-      x.svg = fs.readFileSync(dirPath + "\\" + file).toString();
+      const name = path.parse(file).name
+      x.name = name;
+      const parseName = name.toLowerCase().replace(/\s/g, '-')
+      
+      const svgString = fs.readFileSync(dirPath + "\\" + file).toString()
+      x.svg = svgString.replace(/cls/g, parseName);
       filesdata.push(x);
     });
     return filesdata;
@@ -32,6 +36,12 @@ async function listDir(dirPath) {
     console.error("Error occured while reading directory!", err);
   }
 }
+function parseHTML(html) {
+  var t = document.createElement('template');
+  t.innerHTML = html;
+  return t.content;
+}
+
 
 export default {
   getDefaultDirectorySubfolders,
