@@ -29,7 +29,7 @@ async function createWindow() {
 		frame: false,
 		autoHideMenuBar: true,
 		backgroundColor: '#0a101d',
-		titleBarStyle: "hiddenInset",
+		titleBarStyle: "hidden",
 		webPreferences: {
 
 			// Use pluginOptions.nodeIntegration, leave this alone

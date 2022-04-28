@@ -19,6 +19,10 @@
 import { Getter, Mutation } from 'vuex-class'
 import { Component, Vue } from 'vue-property-decorator';
 // import { useIpcRenderer } from '@vueuse/electron'
+// import { Titlebar, Color } from 'custom-electron-titlebar'
+// new Titlebar({
+// 	backgroundColor: Color.fromHex('#0a101d')
+// });
 const fs = require('fs')
 import { ipcRenderer } from 'electron'
 @Component({

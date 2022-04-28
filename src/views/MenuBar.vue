@@ -26,6 +26,7 @@
   </el-row>
 </template>
 <script lang="ts">
+
 import { Getter, Mutation } from "vuex-class";
 import { Component, Vue } from "vue-property-decorator";
 import { remote, ipcRenderer } from "electron";

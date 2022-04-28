@@ -19,7 +19,7 @@ export default new Vuex.Store({
       state.nftData = payload;
     },
     addLayerToBaseModel(state, payload) {
-      const baseModel = state.baseModel;
+      const baseModel:any = state.baseModel;
       const checkIfItemExists = baseModel.find((item) => {
         return item.trait === payload.trait
       });
@@ -29,9 +29,12 @@ export default new Vuex.Store({
         checkIfItemExists.layerName = payload.item.name
         checkIfItemExists.svg = payload.item.svg
       }else{
-        state.baseModel.push({trait: payload.trait, layerName: payload.item.name, svg: payload.item.svg})
+        baseModel.push({trait: payload.trait, layerName: payload.item.name, svg: payload.item.svg, colors:[{className:'', color:''}]})
       }
     },
+    sortLayers(state,payload){
+      state.baseModel = payload
+    }
   },
   actions: {},
   modules: {},

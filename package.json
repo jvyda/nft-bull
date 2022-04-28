@@ -16,6 +16,7 @@
     "@vueuse/electron": "^8.3.1",
     "clone-deep": "^4.0.1",
     "core-js": "^3.6.5",
+    "custom-electron-titlebar": "^4.1.0",
     "electron-store": "^8.0.1",
     "element-ui": "^2.15.8",
     "lodash": "^4.17.21",
@@ -25,6 +26,7 @@
     "vue-lodash": "^2.1.2",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
+    "vuedraggable": "^2.24.3",
     "vuex": "^3.4.0",
     "vuex-class": "^0.3.2"
   },
