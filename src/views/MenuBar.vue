@@ -75,7 +75,7 @@ export default class MenuBar extends Vue {
     let filename = await dialog.showSaveDialog(WIN, options);
 
     const fs = require("fs");
-    console.log(filename);
+
 
     var jsonContent = JSON.stringify(filename);
     if (!filename.canceled) {

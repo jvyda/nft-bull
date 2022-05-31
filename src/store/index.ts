@@ -34,6 +34,9 @@ export default new Vuex.Store({
     },
     sortLayers(state,payload){
       state.baseModel = payload
+    },
+    removeLayerMutation(state, payload){
+      state.baseModel.splice(payload,1);
     }
   },
   actions: {},

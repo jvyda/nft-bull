@@ -143,7 +143,6 @@ return {fill: obj.fill, stroke:obj.stroke}
       //  newObj.styles =
     });
     buildStylesArray.push(newObj)
-    console.log(buildStylesArray)
   }
 }
 </script>
