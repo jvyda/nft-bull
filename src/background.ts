@@ -25,25 +25,25 @@ async function createWindow() {
 	const mainWindow = new BrowserWindow({
 		width: 1000,
 		height: 800,
-		show: false,
-		frame: false,
-		autoHideMenuBar: true,
+		show: true,
+		// frame: false,
+		// autoHideMenuBar: true,
 		backgroundColor: '#0a101d',
-		titleBarStyle: "hidden",
+		// titleBarStyle: "hidden",
 		webPreferences: {
 
 			// Use pluginOptions.nodeIntegration, leave this alone
 			// See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
 			nodeIntegration: true,
 			contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
-			preload:  path.join(__dirname, `../src/preload.js`),
+			preload: path.join(__dirname, `../src/preload.js`),
 			enableRemoteModule: true
 		}
 	})
 
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
 		// Load the url of the dev server if in development mode
-		
+
 		await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
 		if (!process.env.IS_TEST) mainWindow.webContents.openDevTools()
 	} else {
@@ -51,10 +51,10 @@ async function createWindow() {
 		// Load the index.html when not in development
 		mainWindow.loadURL('app://./index.html')
 	}
-	  mainWindow.once('ready-to-show', () => {
+	mainWindow.once('ready-to-show', () => {
 		mainWindow.show()
 		mainWindow.focus();
-	  })
+	})
 }
 
 // Quit when all windows are closed. 
@@ -94,11 +94,11 @@ ipcMain.on('defaultDirectory:unset', (event, log) => {
 		title: 'Select Project Path',
 		properties: ['openDirectory']
 	}).then(async (result) => {
-		if(!result.canceled){
-			const filesJson = await mainwindowClass.readFilesInaDirectory(result.filePaths[0], mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]) )
-			event.sender.send('defaultDirectory:set', {result, data: filesJson});
-		}else{
-			event.sender.send('defaultDirectory:set', {result});
+		if (!result.canceled) {
+			const filesJson = await mainwindowClass.readFilesInaDirectory(result.filePaths[0], mainwindowClass.getDefaultDirectorySubfolders(result.filePaths[0]))
+			event.sender.send('defaultDirectory:set', { result, data: filesJson });
+		} else {
+			event.sender.send('defaultDirectory:set', { result });
 		}
 	}).catch(err => {
 		console.log(err)
